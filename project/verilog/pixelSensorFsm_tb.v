@@ -64,16 +64,17 @@ module pixelSensor_tb;
    //Digital
    wire              erase;
    wire              expose;
-   wire              read0, read2, read2, read3;
+   wire              readStateOn;
+   wire              read0, read1, read2, read3;
    wire              convert;
 
    tri[7:0]         pixData; //  We need this to be a wire, because we're tristating it
 
-   //Instanciate the pixel
-   pixelArray  pa1(anaBias1, anaRamp, anaReset, erase, expose, read0, read1, read2, read3, pixData);
+   //Instanciate the pixelArray
+   pixelArray  pa1(.VBN1(anaBias1), .RAMP(anaRamp), .RESET(anaReset), .ERASE(erase), .EXPOSE(expose), .READ0(read0), .READ1(read1), .READ2(read2), .READ3(read3), .DATA(pixData));
 
    pixelSensorFsm #(.c_erase(5),.c_expose(255),.c_convert(255),.c_read(5))
-   fsm1(.clk(clk),.reset(reset),.erase(erase),.expose(expose),.read0(read0),.read1(read1),.read2(read2),.read3(read3),.convert(convert));
+   fsm1(.clk(clk),.reset(reset),.erase(erase),.expose(expose),.readStateOn(readStateOn),.read0(read0),.read1(read1),.read2(read2),.read3(read3),.convert(convert));
 
 
    //------------------------------------------------------------
@@ -91,7 +92,7 @@ module pixelSensor_tb;
    assign anaBias1 = expose ? clk : 0;
 
    // If we're not reading the pixData, then we should drive the bus
-   assign pixData = read ? 8'bZ: data;
+   assign pixData = readStateOn ? 8'bZ: data;
 
    // When convert, then run a analog ramp (via anaRamp clock) and digtal ramp via
    // data bus.
@@ -116,7 +117,7 @@ module pixelSensor_tb;
          pixelDataOut = 0;
       end
       else begin
-         if(read)
+         if(readStateOn)
            pixelDataOut <= pixData;
       end
    end

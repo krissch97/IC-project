@@ -34,6 +34,7 @@ module pixelSensorFsm(
                        input  logic      reset,
                        output logic erase,
                        output logic expose,
+                       output logic readStateOn,
                        output logic read0,
                        output logic read1,
                        output logic read2,
@@ -67,27 +68,27 @@ module pixelSensorFsm(
       case(state)
         ERASE: begin
            erase <= 1;
-           read <= 0;
+           readStateOn <= 0;
            expose <= 0;
            convert <= 0;
         end
         EXPOSE: begin
            erase <= 0;
-           read <= 0;
+           readStateOn <= 0;
            expose <= 1;
            convert <= 0;
         end
         CONVERT: begin
            erase <= 0;
-           read <= 0;
+           readStateOn <= 0;
            expose <= 0;
            convert <= 1;
         end
         READ: begin
            erase <= 0;
+           readStateOn <= 1;
            expose <= 0;
            convert <= 0;
-        end
         case (readState)
            READ0: begin
               read0 <= 1;
@@ -114,18 +115,14 @@ module pixelSensorFsm(
               read3 <= 1;
            end
         endcase
-        begin
-           erase <= 0;
-           read0 <= 1;
-           read1 <= 0;
-           read2 <= 0;
-           read3 <= 0;
-           expose <= 0;
-           convert <= 0;
         end
         IDLE: begin
            erase <= 0;
-           read <= 0;
+           readStateOn <= 0;
+              read0 <= 0;
+              read1 <= 0;
+              read2 <= 0;
+              read3 <= 0;
            expose <= 0;
            convert <= 0;
 
@@ -170,15 +167,15 @@ module pixelSensorFsm(
              if(counter == c_read) begin //READ1
                 readState <= READ1;
              end
-             if(counter == 2*c_read) begin //READ2
+             else if(counter == 2*c_read) begin //READ2
                 readState <= READ2;
              end
-             if(counter == 3*c_read) begin //READ3
+             else if(counter == 3*c_read) begin //READ3
                 readState <= READ3;
              end
-             if(counter == 4*c_read) begin
-                state <= IDLE;
+             else if(counter == 4*c_read) begin
                 next_state <= ERASE;
+                state <= IDLE;
              end
            IDLE:
              state <= next_state;
