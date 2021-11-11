@@ -1,0 +1,27 @@
+digraph finite_state_machine {
+	rankdir=LR size="8,5"
+	node [shape=circle]
+	IDLE
+	ERASE
+	EXPOSE
+	CONVERT
+	READ0
+	READ1
+	READ2
+	READ2
+	IDLE -> ERASE
+	ERASE -> ERASE [label="cntr ≠ c_erase"]
+	ERASE -> EXPOSE [label="cntr = c_erase"]
+	EXPOSE -> EXPOSE [label="cntr ≠ c_expose"]
+	EXPOSE -> CONVERT [label="cntr = c_expose"]
+	CONVERT -> CONVERT [label="cntr ≠ c_convert"]
+	CONVERT -> READ0 [label="cntr = c_convert"]
+	READ0 -> READ0 [label="cntr ≠ c_read"]
+	READ0 -> READ1 [label="cntr = c_read"]
+	READ1 -> READ1 [label="cntr ≠ 2·c_read"]
+	READ1 -> READ2 [label="cntr = 2·c_read"]
+	READ2 -> READ2 [label="cntr ≠ 3·c_read"]
+	READ2 -> READ3 [label="cntr = 3·c_read"]
+	READ3 -> READ3 [label="cntr ≠ 4·c_read"]
+	READ3 -> IDLE [label="cntr = 4·c_read"]
+}
