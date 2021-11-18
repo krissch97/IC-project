@@ -81,24 +81,24 @@ Rphoto VPG VSS 1G
 * BC1 VCMP_OUT VSS V = ((atan(100000*(V(VSTORE) - V(VRAMP)))) + 1.58)/3.14*1.5
 
 * Comparator
-* pmos setup: D G S B
-M4 VD1 VD1 VDD VDD pmos  w=0.5u  l=0.5u  m=4
-M5 VD2 VD1 VDD VDD pmos  w=0.5u  l=0.5u  m=4
+* pmos setup: D G S B pmos
+M4 VD1 VD1 VDD VDD pmos  w=1u  l=0.13u  m=3
+M5 VD2 VD1 VDD VDD pmos  w=1u  l=0.13u  m=3
 
-* nmos setup: D G S B
-M6 VD1 VSTORE VS1 VSS nmos  w=0.5u  l=0.15u
-M7 VD2 VRAMP VS1 VSS nmos  w=0.5u  l=0.15u
+* nmos setup: D G S B nmos
+M6 VD1 VSTORE VS1 VSS nmos  w=0.3u  l=0.13u
+M7 VD2 VRAMP VS1 VSS nmos  w=0.3u  l=0.13u
 
-* Current mirror
-Rcrnt VDD VGCRNT 150K
-M8 VGCRNT VGCRNT VSS VSS nmos  w=0.5u  l=0.15u  m=4
-M9 VS1 VGCRNT VSS VSS nmos  w=0.5u  l=0.15u  m=4
+* Current mirror, with I=125u
+Rcrnt VDD VGCRNT 12K
+M8 VGCRNT VGCRNT VSS VSS nmos  w=0.3u  l=0.13u  m=5
+M9 VS1 VGCRNT VSS VSS nmos  w=0.3u  l=0.13u  m=5
 
 * Inverter x2
-M10 VINV1 VD2 VDD VDD pmos  w=0.5u  l=0.5u  m=7
-M11 VINV1 VD2 VSS VSS nmos  w=0.5u  l=0.15u
+M10 VINV1 VD2 VDD VDD pmos  w=1u  l=0.13u  m=10
+M11 VINV1 VD2 VSS VSS nmos  w=0.3u  l=0.13u
 
-M12 VCMP_OUT VINV1 VDD VDD pmos  w=0.5u  l=0.5u
-M13 VCMP_OUT VINV1 VSS VSS nmos  w=0.5u  l=0.15u
+M12 VCMP_OUT VINV1 VDD VDD pmos  w=1u  l=0.13u
+M13 VCMP_OUT VINV1 VSS VSS nmos  w=0.3u  l=0.13u
 
 .ENDS
